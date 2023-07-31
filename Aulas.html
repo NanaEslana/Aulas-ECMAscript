@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulas ECMAscript</title>
+</head>
+<body>
+    <script>
+        //Onde posso ultilizar o weakMap
+        //pra manter o programa protegido de memory leak
+        //manter dados privados entre os aplicativos,quando apagado a memoria fica livre.
+
+        /*function pessoas(nome){
+             this._nome = nome;
+        }
+
+        pessoas.prototype.getNome = function(){
+            return this._nome;
+        }
+
+        Meu objetivo era protegero nome,mas ultilizando essa funçãonão proteger. 
+        */ 
+
+    let pessoas = (function(){
+    let dadosPrivados = new WeakMap();//Atribultos que queremos proteger dentro do objeto.
+
+        function pessoas(nome){
+         dadosPrivados.set(this,{nome: nome});//This é o proprio objeto.
+        }
+        pessoas.prototype.getNome = function(){
+        return dadosPrivados.get(this).nome;//Pega nosso objeto e devolver nome.
+        };
+        return pessoas;
+    }())
+
+    let eslana = new pessoas('eslana');
+    console.log(eslana.getNome()); //eslana
+    console.log(eslana._nome);//undefined, esse cara não exister dentro do nosso weakMap
+
+    //Um jeito de proteger meus dados entro do weakMap.
+
+    </script>
+    <script>
+        //quero uma lista qie evite duplicagem
+        //tentamos coloca os mesmo elementos e o sets não permite
+        //Ela manter ordem quando colocado outros itens.
+        //Set é umobjeto iteravel.
+
+        console.log("------ Musicas -----");
+
+        let musica_1 = {titulo: 'Sem você meu coração e null',autor: 'Orange'};
+        let musica_2 = {titulo: 'Meu oração componetizado',autor: 'React'};
+        let musica_3 = {titulo: 'Tudo isso e tão dinamico',autor: 'JavaScript'};
+        let musica_4 = {titulo: 'Não me chame depois.',autor: 'Node'};
+        let musica_5 = {titulo: 'Não ha amor existe',autor: 'SQL'};
+
+        let playlist = new Set(); //Criar um Set, pode adicionar as musicas por aqui também.
+
+        //Adicionar uma musica 
+        playlist.add(musica_1);
+        playlist.add(musica_3);
+
+        //Remover musica
+        playlist.delete(musica_3);
+
+        //Remover todas as Musicas
+        playlist.clear();
+
+        //adiciona uma musica que ja esta na playlist
+        playlist.add(musica_1); //Ela não e adicionada
+
+
+        //Ver quantas musicas tem na playlist
+        console.log(playlist.size);
+
+
+        for(let musica of playlist){
+             console.log(musica); //Mostrar as musicas no console.
+        }
+
+    </script>
+</body>
+</html>
